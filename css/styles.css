@@ -1,0 +1,36 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui;
+}
+
+#container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: bisque;
+}
+
+.object {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+}
+
+.rect {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  background-color: rgba(0, 0, 255, 0.158);
+  border: 1px solid blue;
+}
+
+.selected {
+  background-color: aqua;
+}

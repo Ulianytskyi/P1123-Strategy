@@ -36,11 +36,16 @@ function createObjects(objCounter) {
 }
 
 createObjects(objCounter);
-let x1, y1, x2, y2, rectW, rectH;
+let x1, y1, x2, y2, rectW, rectH, oneObj;
 let isMoving = false;
 
 // Event listener for mouse down
 container.addEventListener('mousedown', (event) => {
+
+  if (oneObj == null && event.target.className == 'object') {
+    oneObj = event.target;
+  }
+  
   x1 = event.clientX;
   y1 = event.clientY;
 
@@ -90,7 +95,7 @@ container.addEventListener('mousemove', (event) => {
 });
 
 // Event listener for mouse up
-container.addEventListener('mouseup', () => {
+container.addEventListener('mouseup', (ev) => {
   isMoving = false;
 
   // Remove the rectangle if present
@@ -107,6 +112,7 @@ container.addEventListener('mouseup', () => {
       }
     });
   }
+
   if (x1 < x2 && y1 > y2) {
     $$class('.object').forEach(object => {
       let pos = takeCoords(object.dataset.xy);
@@ -115,6 +121,7 @@ container.addEventListener('mouseup', () => {
       }
     });
   }
+
   if (x1 > x2 && y1 > y2) {
     $$class('.object').forEach(object => {
       let pos = takeCoords(object.dataset.xy);
@@ -123,6 +130,7 @@ container.addEventListener('mouseup', () => {
       }
     });
   }
+
   if (x1 > x2 && y1 < y2) {
     $$class('.object').forEach(object => {
       let pos = takeCoords(object.dataset.xy);
@@ -132,6 +140,12 @@ container.addEventListener('mouseup', () => {
     });
   }
 
+  // Select object by one click
+  if (oneObj != null) {
+    oneObj.classList.add('selected');
+    oneObj = null;
+  }
+  
 });
 
 // Function to extract coordinates from object's dataset
@@ -160,25 +174,33 @@ container.addEventListener('contextmenu', (event) => {
 
   // Check if multiple objects are selected
   $$class('.selected').forEach(object => {
-    // Adjust destination point to prevent overlap if multiple objects are selected
-    if ($$class('.selected').length > 1) {
-      let pos = takeCoords(object.dataset.xy);
-      if (pos.x < destX) { destX -= 10; }
-      if (pos.y < destY) { destY -= 10; }
-      if (pos.x > destX) { destX += 10; }
-      if (pos.y > destX) { destY += 10; }   
+    let pos = takeCoords(object.dataset.xy);
+
+    if (pos.x < destX && pos.y < destY) {
+      console.log('\\>');
     }
 
-    // Update object's dataset and animate its movement
+    console.log(event.target);
+
+
+
+    // Update object's dataset
     object.dataset.xy = `${destX}-${destY}`;
-    gsap.to(object, {
-      left: destX + 'px',
-      top: destY + 'px',
-      duration: 1,
-      ease: 'power2.inOut',
-    });
+    // Animate object's movement
+    moveAnimation(object, destX, destY);
   });
 
   // Deselect objects after the operation
   deselectObjects();
 });
+
+
+// Function to animate object's movement
+function moveAnimation(object, destX, destY) {
+  gsap.to(object, {
+    left: destX + 'px',
+    top: destY + 'px',
+    duration: 1,
+    ease: 'none',
+  });
+}

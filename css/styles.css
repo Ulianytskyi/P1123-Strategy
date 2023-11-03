@@ -18,6 +18,7 @@ body {
 
 .object {
   position: absolute;
+  transform: translate(-5px, -5px);
   width: 10px;
   height: 10px;
   background-color: red;
